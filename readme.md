@@ -27,8 +27,8 @@ Before running the app you need to create `config.json` file with **two** requir
   "SaveFilePath": "C:\\example\\file\\path"
 }
 ```
-
-> **NOTE** Created file needs to be saved in project root folder
+**Save file in root folder of the project.** 
+> **Note** If you want to create file elsewhere you need to specify path by adding `-DconfigPath=<config_path>` vm argument.
 </div>
 
 <div id="run">

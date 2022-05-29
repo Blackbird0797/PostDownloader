@@ -9,14 +9,19 @@ import provider.UserProvider
 import service.FileReaderImpl
 import service.FileSaverImpl
 import service.PostSaver
+import java.nio.file.Path
 
 class Main {
     private val logger = KotlinLogging.logger(this.javaClass.simpleName)
 
     fun main() = runBlocking {
-        val fileReader = FileReaderImpl(System.getProperty("user.dir"))
-        val apiConfiguration = ApiConfiguration(fileReader).readConfiguration()
-        val fileConfiguration = FileConfiguration(fileReader).readConfiguration()
+        val configPath = System.getProperty("configPath", "config.json").replace("?", "")
+        val (configFileFolder, configFileName) = Path.of(configPath).let {
+            if (it.isAbsolute) Pair(it.parent.toString(), it.fileName.toString()) else Pair(System.getProperty("user.dir"), it.toString())
+        }
+        val fileReader = FileReaderImpl(configFileFolder)
+        val apiConfiguration = ApiConfiguration(fileReader, configFileName).readConfiguration()
+        val fileConfiguration = FileConfiguration(fileReader, configFileName).readConfiguration()
         logger.debug { "Configurations read." }
         val apiClient = ApiClient(apiConfiguration)
         val postApiService = apiClient.getPostApiService()

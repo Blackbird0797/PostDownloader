@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import service.FileReader
 
-class FileConfiguration(fileReader: FileReader) : Configuration(fileReader) {
+class FileConfiguration(fileReader: FileReader, configFileName: String? = null) : Configuration(fileReader, configFileName) {
 
     private val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
@@ -14,7 +14,7 @@ class FileConfiguration(fileReader: FileReader) : Configuration(fileReader) {
     var fileSavePath: String? = null
 
     override suspend fun readConfiguration(): FileConfiguration {
-        DEFAULT_CONFIG_FILE_NAME?.let {
+        configFileName?.let {
             val fileContent = fileReader.readFile(it)
             val config = gson.fromJson(fileContent, this::class.java)
             if (config.fileSavePath.isNullOrBlank()) {

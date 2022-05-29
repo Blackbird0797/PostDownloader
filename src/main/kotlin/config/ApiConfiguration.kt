@@ -9,7 +9,7 @@ import service.FileReader
 import java.io.FileNotFoundException
 import java.io.IOException
 
-class ApiConfiguration(fileReader: FileReader) : Configuration(fileReader) {
+class ApiConfiguration(fileReader: FileReader, configFileName: String? = null) : Configuration(fileReader, configFileName) {
     @Expose
     @SerializedName("ApiUri")
     var apiUri: String? = null
@@ -20,7 +20,7 @@ class ApiConfiguration(fileReader: FileReader) : Configuration(fileReader) {
 
     @kotlin.jvm.Throws(IOException::class, FileNotFoundException::class, JsonSyntaxException::class)
     override suspend fun readConfiguration(): ApiConfiguration {
-        DEFAULT_CONFIG_FILE_NAME?.let {
+        configFileName?.let {
             val fileContent = fileReader.readFile(it)
             val config = gson.fromJson(fileContent, this::class.java)
             if (config.apiUri.isNullOrBlank()) {
