@@ -1,5 +1,5 @@
 .gradle
 build
-.idea
 gradlew
 gradlew.bat
+/.idea/
