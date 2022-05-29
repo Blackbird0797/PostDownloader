@@ -12,19 +12,15 @@ class PostProvider(
 ) {
     private val coroutineContext = Dispatchers.IO
 
-    suspend fun getPost(id: Long): PostDTO? {
-        return withContext(coroutineContext) {
-            postApiService.getPost(id)?.let {
-                PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentsByPostId(it.id))
-            }
+    suspend fun getPost(id: Long): PostDTO = withContext(coroutineContext) {
+        postApiService.getPost(id).let {
+            PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentsByPostId(it.id))
         }
     }
 
-    suspend fun getAllPosts(): List<PostDTO>? {
-        return withContext(coroutineContext) {
-            postApiService.getAllPosts()
-                ?.map { PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentsByPostId(it.id)) }
-        }
+    suspend fun getAllPosts(): List<PostDTO> = withContext(coroutineContext) {
+        postApiService.getAllPosts()
+            .map { PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentsByPostId(it.id)) }
     }
 
 }

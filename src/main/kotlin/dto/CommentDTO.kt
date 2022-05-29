@@ -4,9 +4,7 @@ class CommentDTO(val postId: Long, val id: Long, val name: String, val email: St
 
     override fun toString(): String = "[$postId] $id $name/$email:\n$body"
 
-    override fun hashCode(): Int {
-        return 31 * postId.hashCode() + id.hashCode()
-    }
+    override fun hashCode(): Int = 31 * postId.hashCode() + id.hashCode()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
