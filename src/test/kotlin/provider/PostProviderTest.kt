@@ -8,7 +8,6 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockkClass
 import kotlinx.coroutines.runBlocking
 import model.Post
 import org.junit.jupiter.api.Test
@@ -20,14 +19,16 @@ import kotlin.test.assertNotNull
 internal class PostProviderTest {
 
     @MockK
-    private val postApiService: PostApiService = mockkClass(PostApiService::class)
+    private lateinit var postApiService: PostApiService
+
+    @MockK
+    private lateinit var userProvider: UserProvider
+
+    @MockK
+    private lateinit var commentProvider: CommentProvider
 
     @InjectMockKs(injectImmutable = true)
-    private val userProvider: UserProvider = mockkClass(UserProvider::class)
-
-    private val commentProvider: CommentProvider = mockkClass(CommentProvider::class)
-
-    private val postProvider = PostProvider(postApiService, userProvider, commentProvider)
+    private lateinit var postProvider: PostProvider
 
 
     @Test
