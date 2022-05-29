@@ -10,6 +10,7 @@ import service.FileSaverImpl
 
 fun main() {
     val fileReader = FileReaderImpl(System.getProperty("user.dir"))
+
     runBlocking {
         val apiConfiguration = ApiConfiguration(fileReader).readConfiguration()
         val fileConfiguration = FileConfiguration(fileReader).readConfiguration()
@@ -27,7 +28,7 @@ fun main() {
         val saveFileJobs = arrayListOf<Job>()
 
         posts?.forEach {
-            saveFileJobs.add(async(start = CoroutineStart.LAZY) {
+            saveFileJobs.add(async(start = CoroutineStart.LAZY, context = Dispatchers.Default) {
                 println("Saving file ${it.id} started..")
                 fileSaver.saveFile(it.id.toString(), gson.toJson(it))
                 println("File ${it.id} saved!")

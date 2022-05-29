@@ -11,14 +11,14 @@ class PostProvider(private val postApiService: PostApiService, private val userP
     suspend fun getPost(id: Long): PostDTO? {
         return withContext(coroutineContext) {
             postApiService.getPost(id)?.let {
-                PostDTO(it.id, userProvider.getUser(it.userId)!!, it.title, it.body)
+                PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body)
             }
         }
     }
 
     suspend fun getAllPosts(): List<PostDTO>? {
         return withContext(coroutineContext) {
-            postApiService.getAllPosts()?.map { PostDTO(it.id, userProvider.getUser(it.userId)!!, it.title, it.body) }
+            postApiService.getAllPosts()?.map { PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body) }
         }
     }
 
