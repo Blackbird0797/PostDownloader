@@ -1,6 +1,6 @@
 package dto
 
-class PostDTO(val id: Long, val user: UserDTO, val title: String, val body: String) : DTO {
+class PostDTO(val id: Long, val user: UserDTO, val title: String, val body: String) {
     override fun toString(): String {
         return "[$id] User [${user.username}] posted \"${title}\":\n$body\n"
     }
