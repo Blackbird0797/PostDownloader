@@ -1,6 +1,7 @@
 package provider
 
 import api.PostApiService
+import dto.CommentDTO
 import dto.PostDTO
 import dto.UserDTO
 import io.mockk.coEvery
@@ -16,7 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @ExtendWith(MockKExtension::class)
-internal class `Post Provider Test` {
+internal class PostProviderTest {
 
     @MockK
     private val postApiService: PostApiService = mockkClass(PostApiService::class)
@@ -24,50 +25,52 @@ internal class `Post Provider Test` {
     @InjectMockKs(injectImmutable = true)
     private val userProvider: UserProvider = mockkClass(UserProvider::class)
 
+    private val commentProvider: CommentProvider = mockkClass(CommentProvider::class)
 
-    private val postProvider = PostProvider(postApiService, userProvider)
+    private val postProvider = PostProvider(postApiService, userProvider, commentProvider)
 
 
     @Test
     fun `should get post when ok`() = runBlocking {
         //given
-        val userDTO = UserDTO(1, "Test name", "Test username", "test@test.test")
         val postId = 1L
-        val post = Post(postId, 1, "Post title", "Post body")
-        coEvery { (postApiService.getPost(postId)) } returns post
+        val userDTO = UserDTO(1, "Test name", "Test username", "test@test.test")
+        val comments = arrayListOf(
+            CommentDTO(1, 1, "Comment name", "Author email", "Comment body"),
+            CommentDTO(1, 2, "Comment name", "Author email", "Comment body"),
+            CommentDTO(1, 3, "Comment name", "Author email", "Comment body"),
+            CommentDTO(1, 4, "Comment name", "Author email", "Comment body")
+        )
+        coEvery { (postApiService.getPost(postId)) } returns Post(postId, 1, "Post title", "Post body")
         coEvery { userProvider.getUser(1) } returns userDTO
+        coEvery { commentProvider.getCommentsByPostId(postId) } returns comments
         //when
         val actual = postProvider.getPost(postId)
         //then
         assertNotNull(actual)
-        assertEquals(PostDTO(postId, userDTO, "Post title", "Post body"), actual)
+        assertEquals(PostDTO(postId, userDTO, "Post title", "Post body", comments), actual)
     }
 
     @Test
     fun `should get all posts when ok`() = runBlocking {
         //given
         val posts = arrayListOf(
-            Post(
-                1,
-                1,
-                "Post 1 title",
-                "Post 1 body"
-            ), Post(
-                2,
-                2,
-                "Post 2 title",
-                "Post 2 body"
-            ), Post(
-                3,
-                3,
-                "Post 3 title",
-                "Post 3 body"
-            )
+            Post(1, 1, "Post 1 title", "Post 1 body"),
+            Post(2, 2, "Post 2 title", "Post 2 body"),
+            Post(3, 3, "Post 3 title", "Post 3 body")
         )
         val userDTO = UserDTO(1, "Test user", "Test username", "test@test.test")
+        val comments = arrayListOf(
+            CommentDTO(1, 1, "Comment name", "Author email", "Comment body"),
+            CommentDTO(1, 2, "Comment name", "Author email", "Comment body"),
+            CommentDTO(1, 3, "Comment name", "Author email", "Comment body"),
+            CommentDTO(1, 4, "Comment name", "Author email", "Comment body")
+        )
+
         coEvery { postApiService.getAllPosts() } returns posts
         coEvery { userProvider.getUser(any()) } returns userDTO
-        val expected = posts.map { PostDTO(it.id, userDTO, it.title, it.body) }
+        coEvery { commentProvider.getCommentsByPostId(any()) } returns comments
+        val expected = posts.map { PostDTO(it.id, userDTO, it.title, it.body, comments) }
         //when
         val actual = postProvider.getAllPosts()
         //then

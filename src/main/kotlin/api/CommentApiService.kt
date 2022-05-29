@@ -6,5 +6,5 @@ import retrofit2.http.Query
 
 interface CommentApiService {
     @GET("/comments")
-    suspend fun getCommentByPostId(@Query("postId") postId: Long): List<Comment>
+    suspend fun getCommentsByPostId(@Query("postId") postId: Long): List<Comment>
 }

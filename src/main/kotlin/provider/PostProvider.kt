@@ -15,7 +15,7 @@ class PostProvider(
     suspend fun getPost(id: Long): PostDTO? {
         return withContext(coroutineContext) {
             postApiService.getPost(id)?.let {
-                PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentByPostId(it.id))
+                PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentsByPostId(it.id))
             }
         }
     }
@@ -23,7 +23,7 @@ class PostProvider(
     suspend fun getAllPosts(): List<PostDTO>? {
         return withContext(coroutineContext) {
             postApiService.getAllPosts()
-                ?.map { PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentByPostId(it.id)) }
+                ?.map { PostDTO(it.id, userProvider.getUser(it.userId), it.title, it.body, commentProvider.getCommentsByPostId(it.id)) }
         }
     }
 
