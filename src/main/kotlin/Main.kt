@@ -2,6 +2,7 @@ import api.ApiClient
 import config.ApiConfiguration
 import config.FileConfiguration
 import kotlinx.coroutines.runBlocking
+import provider.CommentProvider
 import provider.PostProvider
 import provider.UserProvider
 import service.FileReaderImpl
@@ -16,8 +17,10 @@ fun main() = runBlocking {
     val apiClient = ApiClient(apiConfiguration)
     val postApiService = apiClient.getPostApiService()
     val userApiService = apiClient.getUserApiService()
+    val commentApiService = apiClient.getCommentApiService()
     val userProvider = UserProvider(userApiService)
-    val postProvider = PostProvider(postApiService, userProvider)
+    val commentProvider = CommentProvider(commentApiService)
+    val postProvider = PostProvider(postApiService, userProvider, commentProvider)
     println("Getting posts from API...")
     val posts = postProvider.getAllPosts()
     println("Posts retrieved!")

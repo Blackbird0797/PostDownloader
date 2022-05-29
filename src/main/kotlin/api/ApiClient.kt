@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiClient(private val config: ApiConfiguration) {
     private lateinit var postApiService: PostApiService
     private lateinit var userApiService: UserApiService
+    private lateinit var commentApiService: CommentApiService
 
 
     fun getPostApiService(): PostApiService {
@@ -39,5 +40,18 @@ class ApiClient(private val config: ApiConfiguration) {
             }
         }
         return userApiService
+    }
+
+    fun getCommentApiService(): CommentApiService {
+        synchronized(config) {
+            if (!::commentApiService.isInitialized) {
+                val client = Retrofit.Builder()
+                    .baseUrl(config.apiUri!!)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                commentApiService = client.create(CommentApiService::class.java)
+            }
+        }
+        return commentApiService
     }
 }
