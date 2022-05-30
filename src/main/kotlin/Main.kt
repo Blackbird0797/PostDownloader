@@ -35,7 +35,7 @@ class Main {
         logger.debug { "Posts retrieved!" }
         val fileSaver = FileSaverImpl(fileConfiguration.fileSavePath!!)
         val postSaver = PostSaver(fileSaver)
-        postSaver.savePosts(posts)
+        postSaver.saveAll(posts)
         logger.debug { "Job complete!" }
     }
 }
