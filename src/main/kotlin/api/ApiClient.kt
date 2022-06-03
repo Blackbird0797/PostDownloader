@@ -6,7 +6,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * Client accessing api services via Retrofit library.
- * Contains functions returning services operating on
  * @constructor
  * @param config ApiConfiguration object containing api client configuration
  */
