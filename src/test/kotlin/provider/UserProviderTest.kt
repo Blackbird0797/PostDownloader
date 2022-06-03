@@ -1,7 +1,5 @@
 package provider
 
-import api.CommentApiService
-import api.PostApiService
 import api.UserApiService
 import dto.CommentDTO
 import dto.PostDTO
@@ -9,11 +7,14 @@ import dto.UserDTO
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.runBlocking
+import io.mockk.junit5.MockKExtension
+import kotlinx.coroutines.test.runTest
 import model.User
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 
+@ExtendWith(MockKExtension::class)
 internal class UserProviderTest {
 
     @MockK
@@ -26,7 +27,7 @@ internal class UserProviderTest {
     private lateinit var userProvider: UserProvider
 
     @Test
-    fun shouldGetAllUsers() = runBlocking {
+    fun `should get all users when ok`() = runTest {
         //given
         val posts = arrayListOf(
             PostDTO(

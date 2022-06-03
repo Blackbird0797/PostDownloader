@@ -9,6 +9,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import model.Post
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,9 +23,6 @@ internal class PostProviderTest {
     private lateinit var postApiService: PostApiService
 
     @MockK
-    private lateinit var userProvider: UserProvider
-
-    @MockK
     private lateinit var commentProvider: CommentProvider
 
     @InjectMockKs(injectImmutable = true)
@@ -32,7 +30,7 @@ internal class PostProviderTest {
 
 
     @Test
-    fun `should get post when ok`() = runBlocking {
+    fun `should get post when ok`() = runTest {
         //given
         val postId = 1L
         val userId = 1L
@@ -53,7 +51,7 @@ internal class PostProviderTest {
     }
 
     @Test
-    fun `should get all posts when ok`() = runBlocking {
+    fun `should get all posts when ok`() = runTest {
         //given
         val posts = arrayListOf(
             Post(1, 1, "Post 1 title", "Post 1 body"),
