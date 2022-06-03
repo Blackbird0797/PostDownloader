@@ -11,47 +11,22 @@ import retrofit2.converter.gson.GsonConverterFactory
  * @param config ApiConfiguration object containing api client configuration
  */
 class ApiClient(private val config: ApiConfiguration) {
-    private lateinit var postApiService: PostApiService
-    private lateinit var userApiService: UserApiService
-    private lateinit var commentApiService: CommentApiService
 
+    private val client = Retrofit.Builder()
+        .baseUrl(config.apiUri!!)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
-    fun getPostApiService(): PostApiService {
-        synchronized(config) {
-            if (!::postApiService.isInitialized) {
-                val client = Retrofit.Builder()
-                    .baseUrl(config.apiUri!!)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                postApiService = client.create(PostApiService::class.java)
-            }
-        }
-        return postApiService
+    val postApiService: PostApiService by lazy {
+        client.create(PostApiService::class.java)
     }
 
-    fun getUserApiService(): UserApiService {
-        synchronized(config) {
-            if (!::userApiService.isInitialized) {
-                val client = Retrofit.Builder()
-                    .baseUrl(config.apiUri!!)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                userApiService = client.create(UserApiService::class.java)
-            }
-        }
-        return userApiService
+    val userApiService: UserApiService by lazy {
+        client.create(UserApiService::class.java)
     }
 
-    fun getCommentApiService(): CommentApiService {
-        synchronized(config) {
-            if (!::commentApiService.isInitialized) {
-                val client = Retrofit.Builder()
-                    .baseUrl(config.apiUri!!)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                commentApiService = client.create(CommentApiService::class.java)
-            }
-        }
-        return commentApiService
+    val commentApiService: CommentApiService by lazy {
+        client.create(CommentApiService::class.java)
     }
+
 }

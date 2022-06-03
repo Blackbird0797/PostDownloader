@@ -24,19 +24,16 @@ class Main {
         val fileConfiguration = FileConfiguration(fileReader, configFileName).readConfiguration()
         logger.debug { "Configurations read." }
         val apiClient = ApiClient(apiConfiguration)
-        val postApiService = apiClient.getPostApiService()
-        val userApiService = apiClient.getUserApiService()
-        val commentApiService = apiClient.getCommentApiService()
+        val postApiService = apiClient.postApiService
+        val userApiService = apiClient.userApiService
+        val commentApiService = apiClient.commentApiService
         val commentProvider = CommentProvider(commentApiService)
         val postProvider = PostProvider(postApiService, commentProvider)
         val userProvider = UserProvider(userApiService, postProvider)
-        logger.debug { "Getting posts from API..." }
+        logger.debug { "Getting data from API..." }
         val allUsers = userProvider.getAllUsers()
-//        val posts = postProvider.getAllPosts()
-        logger.debug { "Posts retrieved!" }
+        logger.debug { "Data retrieved!" }
         val fileSaver = FileSaverImpl(fileConfiguration.fileSavePath!!)
-//        val postSaver = PostSaver(fileSaver)
-//        postSaver.saveAll(posts)
         val userSaver = UserSaver(fileSaver)
         userSaver.saveAll(allUsers)
         logger.debug { "Job complete!" }
