@@ -35,21 +35,21 @@ internal class PostProviderTest {
     fun `should get post when ok`() = runBlocking {
         //given
         val postId = 1L
-        val userDTO = UserDTO(1, "Test name", "Test username", "test@test.test")
+        val userId = 1L
         val comments = arrayListOf(
             CommentDTO(1, 1, "Comment name", "Author email", "Comment body"),
             CommentDTO(1, 2, "Comment name", "Author email", "Comment body"),
             CommentDTO(1, 3, "Comment name", "Author email", "Comment body"),
             CommentDTO(1, 4, "Comment name", "Author email", "Comment body")
         )
+        UserDTO(userId, "Test name", "Test username", "test@test.test", arrayListOf(PostDTO(postId, userId, "Title", "Body", comments)))
         coEvery { (postApiService.getPost(postId)) } returns Post(postId, 1, "Post title", "Post body")
-        coEvery { userProvider.getUser(1) } returns userDTO
         coEvery { commentProvider.getCommentsByPostId(postId) } returns comments
         //when
         val actual = postProvider.getPost(postId)
         //then
         assertNotNull(actual)
-        assertEquals(PostDTO(postId, userDTO, "Post title", "Post body", comments), actual)
+        assertEquals(PostDTO(postId, userId, "Post title", "Post body", comments), actual)
     }
 
     @Test
@@ -60,7 +60,6 @@ internal class PostProviderTest {
             Post(2, 2, "Post 2 title", "Post 2 body"),
             Post(3, 3, "Post 3 title", "Post 3 body")
         )
-        val userDTO = UserDTO(1, "Test user", "Test username", "test@test.test")
         val comments = arrayListOf(
             CommentDTO(1, 1, "Comment name", "Author email", "Comment body"),
             CommentDTO(1, 2, "Comment name", "Author email", "Comment body"),
@@ -69,9 +68,8 @@ internal class PostProviderTest {
         )
 
         coEvery { postApiService.getAllPosts() } returns posts
-        coEvery { userProvider.getUser(any()) } returns userDTO
         coEvery { commentProvider.getCommentsByPostId(any()) } returns comments
-        val expected = posts.map { PostDTO(it.id, userDTO, it.title, it.body, comments) }
+        val expected = posts.map { PostDTO(it.id, it.userId, it.title, it.body, comments) }
         //when
         val actual = postProvider.getAllPosts()
         //then
